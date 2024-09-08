@@ -14,8 +14,8 @@ client = TelegramClient(
 @client.on(events.NewMessage(chats=config.ids.source_ids))
 async def handler_forward_messages(event: events.NewMessage.Event):
     """
-    Копирует входящие сообщения 
-    из source_ids 
+    Копирует входящие сообщения
+    из source_ids
     в target_id.
     """
     await client.forward_messages(

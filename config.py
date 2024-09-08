@@ -61,6 +61,6 @@ def load_config(path: str | None = None) -> Config:
         ),
         ids=Channel_ids(
             target_id=int(getenv("target_id")),
-            source_ids=list(map(int, getenv("source_ids").split(', '))),
+            source_ids=list(map(int, getenv("source_ids").split(", "))),
         ),
     )

@@ -1,27 +1,25 @@
 from telethon import TelegramClient, events
-from config import (
-    api_id, api_hash, api_session, 
-    target_id, 
-    source_id
+from config import load_config
+
+
+config = load_config()
+
+client = TelegramClient(
+    api_id=config.client.api_id,
+    api_hash=config.client.api_hash,
+    session=config.client.session,
 )
 
 
-
-
-
-client = TelegramClient(api_session, api_id, api_hash)
-
-
-
-@client.on(events.NewMessage(chats=source_id))
+@client.on(events.NewMessage(chats=config.ids.source_ids))
 async def handler_forward_messages(event: events.NewMessage.Event):
     """
     Копирует входящие сообщения 
-    из source_id 
+    из source_ids 
     в target_id.
     """
     await client.forward_messages(
-        entity=target_id,
+        entity=config.ids.target_id,
         messages=event.message,
     )
 

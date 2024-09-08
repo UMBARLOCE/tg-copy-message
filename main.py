@@ -1,5 +1,6 @@
 from telethon import TelegramClient, events
 from config import load_config
+from pprint import pprint
 
 
 config = load_config()
@@ -11,17 +12,37 @@ client = TelegramClient(
 )
 
 
+# @client.on(events.Album(chats=config.ids.source_ids))
+# async def handler_forward_to(event: events.Album.Event):
+#     """Пересылает сообщения без ссылки на источник."""
+#     await event.forward_to(config.ids.target_id)
+
+
+# @client.on(events.NewMessage(chats=config.ids.source_ids))
+# async def handler_forward_messages(event: events.NewMessage.Event):
+#     """Пересылает сообщения со ссылкой на источник."""
+#     await client.forward_messages(
+#         entity=config.ids.target_id,
+#         messages=event.message,
+#     )
+
+
+# @client.on(events.NewMessage(chats=config.ids.source_ids))
+# async def handler_send_message(event: events.NewMessage.Event):
+#     """Пересылает сообщения без ссылки на источник."""
+#     await client.send_message(
+#         entity=config.ids.target_id,
+#         message=event.message,
+#     )
+
+
 @client.on(events.NewMessage(chats=config.ids.source_ids))
-async def handler_forward_messages(event: events.NewMessage.Event):
+async def handler_send_message(event):
     """
-    Копирует входящие сообщения
-    из source_ids
-    в target_id.
+    Внимание на grouped_id=13806529428482186
+    int | None
     """
-    await client.forward_messages(
-        entity=config.ids.target_id,
-        messages=event.message,
-    )
+    print(event, end="\n\n")
 
 
 client.start()

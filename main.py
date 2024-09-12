@@ -12,38 +12,64 @@ client = TelegramClient(
 )
 
 
-# @client.on(events.Album(chats=config.ids.source_ids))
-# async def handler_forward_to(event: events.Album.Event):
-#     """Пересылает сообщения без ссылки на источник."""
-#     await event.forward_to(config.ids.target_id)
+@client.on(events.Album(chats=config.ids.source_ids))
+async def handler_forward_to(event: events.Album.Event):
+    """
+    Со ссылкой на источник.
+    В сообщении помещается 10 вложений; остаток помещается в следующее сообщение.
+
+    Поддерживает подпись альбома.
+
+    Отправляет альбом от 2-х фото.
+    Отправляет альбом от 2-х файлов.
+    """
+
+    await event.forward_to(config.ids.target_id)
 
 
-# @client.on(events.NewMessage(chats=config.ids.source_ids))
-# async def handler_forward_messages(event: events.NewMessage.Event):
-#     """Пересылает сообщения со ссылкой на источник."""
-#     await client.forward_messages(
-#         entity=config.ids.target_id,
-#         messages=event.message,
-#     )
+@client.on(events.NewMessage(chats=config.ids.source_ids))
+async def handler_forward_messages(event: events.NewMessage.Event):
+    """
+    Со ссылкой на источник.
+    Отправляет текст.
+    Отправляет текст со ссылкой.
+    Отправляет текст с 1 картинкой одним блоком.
+
+    Картинки более одной отправляются отдельными сообщениями,
+    при этом текст прилипает к одной из картинок.
+
+    Вылетает raise ValueError('Request was unsuccessful {} time(s)'
+    при отправке более 6 фото за раз.
+    """
+
+    if event.message.grouped_id:
+        return
+    
+    await client.forward_messages(
+        entity=config.ids.target_id,
+        messages=event.message,
+    )
 
 
 # @client.on(events.NewMessage(chats=config.ids.source_ids))
 # async def handler_send_message(event: events.NewMessage.Event):
-#     """Пересылает сообщения без ссылки на источник."""
+#     """
+#     Без ссылки на источник.
+#     Отправляет текст.
+#     Отправляет текст со ссылкой.
+#     Отправляет текст с 1 картинкой одним блоком.
+
+#     Картинки более одной отправляются отдельными сообщениями,
+#     при этом текст прилипает к одной из картинок.
+
+#     Ошибок нет при отправке более 6 сообщений.
+#     """
 #     await client.send_message(
 #         entity=config.ids.target_id,
 #         message=event.message,
 #     )
 
 
-@client.on(events.NewMessage(chats=config.ids.source_ids))
-async def handler_send_message(event):
-    """
-    Внимание на grouped_id=13806529428482186
-    int | None
-    """
-    print(event, end="\n\n")
-
-
-client.start()
-client.run_until_disconnected()
+if __name__ == "__main__":
+    client.start()
+    client.run_until_disconnected()

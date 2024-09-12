@@ -1,10 +1,8 @@
 from telethon import TelegramClient, events
 from config import load_config
-from pprint import pprint
 
 
 config = load_config()
-
 client = TelegramClient(
     api_id=config.client.api_id,
     api_hash=config.client.api_hash,
@@ -23,7 +21,6 @@ async def handler_forward_to(event: events.Album.Event):
     Отправляет альбом от 2-х фото.
     Отправляет альбом от 2-х файлов.
     """
-
     await event.forward_to(config.ids.target_id)
 
 
@@ -41,7 +38,6 @@ async def handler_forward_messages(event: events.NewMessage.Event):
     Вылетает raise ValueError('Request was unsuccessful {} time(s)'
     при отправке более 6 фото за раз.
     """
-
     if event.message.grouped_id:
         return
     
@@ -49,25 +45,6 @@ async def handler_forward_messages(event: events.NewMessage.Event):
         entity=config.ids.target_id,
         messages=event.message,
     )
-
-
-# @client.on(events.NewMessage(chats=config.ids.source_ids))
-# async def handler_send_message(event: events.NewMessage.Event):
-#     """
-#     Без ссылки на источник.
-#     Отправляет текст.
-#     Отправляет текст со ссылкой.
-#     Отправляет текст с 1 картинкой одним блоком.
-
-#     Картинки более одной отправляются отдельными сообщениями,
-#     при этом текст прилипает к одной из картинок.
-
-#     Ошибок нет при отправке более 6 сообщений.
-#     """
-#     await client.send_message(
-#         entity=config.ids.target_id,
-#         message=event.message,
-#     )
 
 
 if __name__ == "__main__":

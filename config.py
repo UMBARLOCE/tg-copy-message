@@ -29,6 +29,7 @@ def load_config(path: str | None = None) -> Config:
     Проверяет наличие файла .env.
     Загружает переменные окружения.
     Возвращает заполненный экземпляр класса Config.
+    Проверяет наличие api_id и api_hash в файле .env.
     """
 
     if not find_dotenv():
@@ -36,7 +37,7 @@ def load_config(path: str | None = None) -> Config:
 
     load_dotenv()
 
-    return Config(
+    config = Config(
         client=Tg_Client(
             api_id=int(getenv("api_id")),
             api_hash=getenv("api_hash"),
@@ -49,3 +50,8 @@ def load_config(path: str | None = None) -> Config:
             source_ids=list(map(int, getenv("source_ids").split(", "))),
         ),
     )
+
+    if None in (config.client.api_id, config.client.api_hash):
+        exit("Отсутствуют api_id и/или api_hash в файле .env")
+
+    return config

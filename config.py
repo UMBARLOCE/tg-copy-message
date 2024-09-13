@@ -9,6 +9,7 @@ class Tg_Client:
     api_hash: str
     session: str
     system_version: str
+    device_model: str
 
 
 @dataclass
@@ -41,6 +42,7 @@ def load_config(path: str | None = None) -> Config:
             api_hash=getenv("api_hash"),
             session=getenv("session"),
             system_version=getenv("system_version"),
+            device_model=getenv("device_model"),
         ),
         ids=Channel_ids(
             target_id=int(getenv("target_id")),

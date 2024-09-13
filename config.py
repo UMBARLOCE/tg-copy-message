@@ -1,10 +1,13 @@
+"""Модуль для описания классов конфигурации."""
 from dataclasses import dataclass
 from os import getenv
 from dotenv import load_dotenv, find_dotenv
 
 
 @dataclass
-class Tg_Client:
+class App:
+    """API для телеграм-приложения."""
+
     api_id: int
     api_hash: str
     session: str
@@ -13,45 +16,47 @@ class Tg_Client:
 
 
 @dataclass
-class Channel_ids:
+class Ids:
+    """IDs для канала-стиллера и каналов-источников."""
+
     target_id: int
     source_ids: list[int]
 
 
 @dataclass
 class Config:
-    client: Tg_Client
-    ids: Channel_ids
+    """Обобщенный класс конфигурации."""
+
+    app: App
+    ids: Ids
 
 
 def load_config(path: str | None = None) -> Config:
-    """
-    Проверяет наличие файла .env.
-    Загружает переменные окружения.
-    Возвращает заполненный экземпляр класса Config.
-    Проверяет наличие api_id и api_hash в файле .env.
-    """
-
+    """Проверяет файл .env."""
+    # Проверяет наличие файла .env.
     if not find_dotenv():
         exit("Отсутствует файл .env")
 
+    # Загружает переменные окружения.
     load_dotenv()
 
     config = Config(
-        client=Tg_Client(
+        app=App(
             api_id=int(getenv("api_id")),
             api_hash=getenv("api_hash"),
             session=getenv("session"),
             system_version=getenv("system_version"),
             device_model=getenv("device_model"),
         ),
-        ids=Channel_ids(
+        ids=Ids(
             target_id=int(getenv("target_id")),
             source_ids=list(map(int, getenv("source_ids").split(", "))),
         ),
     )
 
-    if None in (config.client.api_id, config.client.api_hash):
+    # Проверяет наличие api_id и api_hash в файле .env.
+    if None in (config.app.api_id, config.app.api_hash):
         exit("Отсутствуют api_id и/или api_hash в файле .env")
 
+    # Возвращает заполненный экземпляр класса Config.
     return config

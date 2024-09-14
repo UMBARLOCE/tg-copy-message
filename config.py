@@ -1,4 +1,5 @@
 """Модуль для описания классов конфигурации."""
+
 from dataclasses import dataclass
 from os import getenv
 

@@ -1,4 +1,5 @@
 """Модуль для загрузки конфигураций и создания экземпляра клиента."""
+
 from config import load_config
 
 from telethon import TelegramClient

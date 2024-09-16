@@ -23,6 +23,7 @@ class Ids:
 
     target_id: int
     source_ids: list[int]
+    drop_author: bool
 
 
 @dataclass
@@ -53,6 +54,7 @@ def load_config(path: str | None = None) -> Config:
         ids=Ids(
             target_id=int(getenv('target_id')),
             source_ids=list(map(int, getenv('source_ids').split(', '))),
+            drop_author=bool(int(getenv('drop_author')))
         ),
     )
 

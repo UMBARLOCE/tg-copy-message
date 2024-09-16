@@ -8,7 +8,10 @@ from telethon import events
 @client.on(events.Album(chats=config.ids.source_ids))
 async def handler_forward_to(event: events.Album.Event) -> None:
     """Отправляет альбом со ссылкой на источник."""
-    await event.forward_to(config.ids.target_id)
+    await event.forward_to(
+        config.ids.target_id,
+        drop_author=config.ids.drop_author,
+    )
 
 
 @client.on(events.NewMessage(chats=config.ids.source_ids))
@@ -20,6 +23,7 @@ async def handler_forward_messages(event: events.NewMessage.Event) -> None:
     await client.forward_messages(
         entity=config.ids.target_id,
         messages=event.message,
+        drop_author=config.ids.drop_author,
     )
 
 

@@ -6,6 +6,26 @@ from os import getenv
 from dotenv import find_dotenv, load_dotenv
 
 
+channel: dict = {
+
+    -1001: [
+        -10011,
+        -10012,
+        ],
+
+    -1002: [
+        -10021,
+        -10022,
+        ],
+
+    -1003: [
+        -10031,
+        -10032,
+        ],
+
+}
+
+
 @dataclass
 class App:
     """API для телеграм-приложения."""
@@ -21,8 +41,7 @@ class App:
 class Ids:
     """IDs для канала-стиллера и каналов-источников."""
 
-    target_id: int
-    source_ids: list[int]
+    channel_ids: dict
     drop_author: bool
 
 
@@ -52,8 +71,7 @@ def load_config(path: str | None = None) -> Config:
             device_model=getenv('device_model'),
         ),
         ids=Ids(
-            target_id=int(getenv('target_id')),
-            source_ids=list(map(int, getenv('source_ids').split(', '))),
+            channel_ids=channel,
             drop_author=bool(int(getenv('drop_author')))
         ),
     )
